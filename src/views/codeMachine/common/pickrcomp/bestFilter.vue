@@ -56,16 +56,16 @@ export default {
 					sortquery: 'saleprice',
 					sortup: true,
 				},
-				{
-					title: '더미2',
-					sortquery: '',
-					sortup: true,
-				},
-				{
-					title: '더미3',
-					sortquery: '',
-					sortup: true,
-				},
+				// {
+				// 	title: '더미2',
+				// 	sortquery: '',
+				// 	sortup: true,
+				// },
+				// {
+				// 	title: '더미3',
+				// 	sortquery: '',
+				// 	sortup: true,
+				// },
 			],
 		}
 	},
@@ -131,11 +131,21 @@ p {
 }
 
 .barwindow::-webkit-scrollbar {
-	display: none;
+	height: 4px;
+}
+
+.barwindow::-webkit-scrollbar-thumb {
+	background-color: orangered;
+	height: 2px;
+	border-radius: 2px;
+}
+
+.barwindow::-webkit-scrollbar-track {
+	background-color: rgb(255, 227, 101);
 }
 
 .besttagbar {
-	width: 180%;
+	width: 132%;
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
