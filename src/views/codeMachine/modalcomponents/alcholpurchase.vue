@@ -33,8 +33,8 @@
 					</div>
 					<div class="others">
 						<p class="brating">
-							<span><img v-for="j in nowUsee.rating" :key="j" src="@/../public/image/rate.png" :alt="j"/></span>
-							<span><img v-for="q in 5 - nowUsee.rating" :key="q" src="@/../public/image/norate.png" :alt="q"/></span>
+							<span><img v-for="j in nowUsee.rating" :key="j" :src="'./image/rate.png'" :alt="j"/></span>
+							<span><img v-for="q in 5 - nowUsee.rating" :key="q" :src="'./image/norate.png'" :alt="q"/></span>
 						</p>
 					</div>
 				</figcaption>
@@ -178,18 +178,18 @@ p {
 }
 
 .productbox::-webkit-scrollbar {
-	width: 3px;
+	width: 5px;
 }
 
 .productbox::-webkit-scrollbar-thumb {
-	background-color: orangered;
+	background-color: rgba(255, 68, 0, 0.623);
 	border-radius: 1px;
 	background-clip: 1px;
 	border: 1px solid transparent;
 }
 
 .productbox::-webkit-scrollbar-track {
-	background-color: orange;
+	background-color: #fff;
 	border-radius: 2px;
 	box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 }

@@ -112,6 +112,7 @@ header {
 	background-color: #fff;
 }
 #mainnav > ul {
+	padding: 0;
 	margin: 0 auto;
 	width: 592px;
 	display: flex;
@@ -122,7 +123,9 @@ header {
 
 #mainnav > ul > li {
 	flex-wrap: wrap;
-	width: 95px;
+	width: 25%;
+	max-width: 25%;
+	padding: 10px 20px;
 	max-height: 95px;
 	list-style: none;
 	color: #3f3d3d;

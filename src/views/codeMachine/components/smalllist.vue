@@ -20,8 +20,8 @@
 							<p class="datebox">{{ i.rdate }}입고!</p>
 							<div>
 								<p class="brating">
-									<span><img v-for="j in i.rating" :key="j" src="@/../public/image/rate.png" :alt="j"/></span>
-									<span><img v-for="q in 5 - i.rating" :key="q" src="@/../public/image/norate.png" :alt="q"/></span>
+									<span><img v-for="j in i.rating" :key="j" :src="'./image/rate.png'" :alt="j"/></span>
+									<span><img v-for="q in 5 - i.rating" :key="q" :src="'./image/norate.png'" :alt="q"/></span>
 								</p>
 								<p>
 									<span v-for="(k, idx) in i.tag" :key="idx" class="tag" :class="k.cname">{{ k.tname }}</span>

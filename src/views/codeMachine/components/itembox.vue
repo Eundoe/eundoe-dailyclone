@@ -9,13 +9,13 @@
 					<p class="scsale" v-if="i.sale > 0">{{ i.sale }}%</p>
 					<p class="screal">
 						<span>{{ Math.floor(i.price * (1 - i.sale / 100)).toLocaleString() }}원</span>
-						<del v-if="i.sale > 0">{{ i.price.toLocaleString() }}원</del>
+						<del v-if="i.sale > 0">원가{{ i.price.toLocaleString() }}원</del>
 					</p>
 				</div>
 				<div class="others">
 					<p class="scrating">
-						<span><img v-for="j in i.rating" :key="j" src="@/../public/image/rate.png" :alt="j"/></span>
-						<span><img v-for="q in 5 - i.rating" :key="q" src="@/../public/image/norate.png" :alt="q"/></span>
+						<span><img v-for="j in i.rating" :key="j" :src="'./image/rate.png'" :alt="j"/></span>
+						<span><img v-for="q in 5 - i.rating" :key="q" :src="'./image/norate.png'" :alt="q"/></span>
 					</p>
 					<p v-if="i.tag.length >= 1" id="producttag">
 						<span v-for="(k, kdx) in i.tag" :key="kdx" :class="k.cname" class="tag">{{ k.tname }}</span>
@@ -47,6 +47,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+p {
+	margin-bottom: 0;
+}
 .itembox {
 	padding: 30px 10px;
 	background-color: #fff;
@@ -79,19 +82,23 @@ export default {
 	padding: 5px 10px;
 }
 
+.itembox figcaption > h3 {
+	font-size: 24px;
+}
+
 .scsale {
-	font-size: 20px;
+	font-size: 22px;
 	font-weight: 500;
 	color: orangered;
 }
 
 .screal > span {
-	font-size: 18px;
+	font-size: 22px;
 	margin-right: 5px;
 }
 
 .screal > del {
-	font-size: 14px;
+	font-size: 18px;
 	color: #7f7f7f;
 }
 .scprice {
@@ -105,6 +112,6 @@ p.scrating {
 }
 
 p.scrating > span > img {
-	max-width: 16px;
+	max-width: 18px;
 }
 </style>
