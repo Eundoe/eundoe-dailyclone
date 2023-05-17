@@ -1,0 +1,6 @@
+export { default as AppMain } from './common/AppMain'
+export { default as nHeader } from '../layout/HeadPart'
+export { default as nFooter } from '../layout/FooterPart'
+export { default as smallList } from './components/smalllist'
+export { default as preparePage } from '../errorpage/Preparepage'
+export { default as purchasePage } from './modalcomponents/alcholpurchase'
