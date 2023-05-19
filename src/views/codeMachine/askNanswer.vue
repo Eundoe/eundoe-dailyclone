@@ -88,7 +88,11 @@ export default {
 		},
 		confirmMessage() {
 			let errorcode = []
+			let wrongword = []
 			for (let j of this.formDate) {
+				if (j.checkresult === false) {
+					wrongword.push(j.title)
+				}
 				if (document.querySelector(j.type + '[name=' + j.name + ']').value === '') {
 					j.checkresult = true
 					errorcode.push(j.title)
@@ -101,6 +105,10 @@ export default {
 				alert(`비어있는 ${errorcode.join(',')}이 있습니다. 전부 작성해주세요`)
 				return false
 			}
+			if (wrongword.length >= 1) {
+				alert(`잘못된 ${wrongword.join(',')}이 있습니다. 전부 작성해주세요`)
+				return false
+			}
 
 			this.$axios({
 				method: 'post',
@@ -111,6 +119,7 @@ export default {
 					contact_title: this.submitForm.contact_title,
 					contact_content: this.submitForm.contact_content,
 				},
+				onUploadProgress: this.$store.dispatch('whatLoadnow'),
 			})
 				.then(res => {
 					console.log(res)

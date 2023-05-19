@@ -4,7 +4,7 @@
 		<nav class="subnav">
 			<h2 class="hide">subnavigation</h2>
 			<ul>
-				<li class="subcategory" v-for="(i, idx) in maincate" :key="idx" style="cursor: pointer;">
+				<li class="subcategory" v-for="(i, idx) in maincate" :key="idx">
 					<span @click="movingcatebar(idx), $router.push({ name: i.to }).catch(() => {})">{{ i.title }}</span>
 				</li>
 			</ul>
@@ -110,6 +110,7 @@ export default {
 .subnav > ul > li > span {
 	line-height: 70px;
 	font-size: 22px;
+	cursor: pointer;
 }
 
 p.nowon {

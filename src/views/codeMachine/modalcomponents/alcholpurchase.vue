@@ -63,6 +63,13 @@ export default {
 				{ title: '선물하기', icon: 'mdi-gift-outline', cname: 'gift_list' },
 				{ title: '내 주변에서 픽업하기', icon: '', cname: 'purchase_list' },
 			],
+			alert: {
+				addicon: 'mdi-heart-plus-outline',
+				delicon: 'mdi-heart-minus-outline',
+				addcont: '내 술킷리스트에 추가되었습니다.',
+				delcont: '내 술킷리스트에서 제거 되었습니다.',
+			},
+			wishcheck: this.$store.state.purchadata.wishList,
 		}
 	},
 	methods: {
