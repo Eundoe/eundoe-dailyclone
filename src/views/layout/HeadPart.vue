@@ -17,8 +17,7 @@
 					:key="idx"
 					v-ripple="{ class: `orange--text` }"
 					@click="$router.push({ name: i.to }).catch(() => {}), selectmenU(idx)"
-					:class="idx === 0 ? 'selected' : false"
-					class="noncheck"
+					:class="i.selected ? 'selected' : false"
 				>
 					<span
 						><v-icon>{{ i.icon }}</v-icon></span
@@ -34,28 +33,30 @@ export default {
 	data() {
 		return {
 			mNav: [
-				{ title: '술픽업', to: 'pickup', icon: 'mdi-shopping-outline' },
-				{ title: '술픽업NOW', to: 'notfound', icon: 'mdi-store' },
-				{ title: '택배배송', to: 'notfound', icon: 'mdi-truck-delivery' },
-				{ title: '마이페이지', to: 'notfound', icon: 'mdi-account-outline' },
+				{ title: '술픽업', to: 'pickup', icon: 'mdi-shopping-outline', selected: false },
+				{ title: '술픽업NOW', to: 'notfound', icon: 'mdi-store', selected: false },
+				{ title: '택배배송', to: 'notfound', icon: 'mdi-truck-delivery', selected: false },
+				{ title: '마이페이지', to: 'notfound', icon: 'mdi-account-outline', selected: false },
 			],
 		}
 	},
+	mounted() {
+		this.mNav[0].selected = true
+	},
 	methods: {
 		prepareW() {
-			document.querySelector('.prepare').styel.left = '50%'
+			document.querySelector('.prepare').style.left = '50%'
 		},
 		selectmenU(x) {
-			let allli = document.querySelectorAll('li.noncheck')
-			for (let i of allli) {
-				i.classList.remove('selected')
+			for (let i of this.mNav) {
+				i.selected = false
 			}
-			allli[x].classList.add('selected')
+			this.mNav[x].selected = true
 			localStorage.setItem('barv', JSON.stringify(x))
 		},
 		subMenu() {
-			for (let i of document.querySelectorAll('.selected')) {
-				i.classList.remove('selected')
+			for (let i of this.mNav) {
+				i.selected = false
 			}
 		},
 	},

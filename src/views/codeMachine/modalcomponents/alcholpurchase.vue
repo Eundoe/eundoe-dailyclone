@@ -12,7 +12,7 @@
 					<span :class="i.cname" v-if="i.icon !== ''"
 						><v-icon :class="nowUsee.wishList ? 'checked' : false" @click="wishListAdd(i.cname)">{{ i.icon }}</v-icon></span
 					>
-					<span :class="i.cname" v-if="i.icon === ''">{{ i.title }}</span>
+					<span :class="i.cname" v-else>{{ i.title }}</span>
 				</li>
 			</ul>
 		</div>
@@ -40,6 +40,12 @@
 				</figcaption>
 			</figure>
 			<alchoinfo />
+		</div>
+		<div id="workitnow">
+			<div class="wishalert">
+				<v-icon>{{ nowUsee.wishList ? this.alert.addicon : this.alert.delicon }}</v-icon>
+				<span>{{ nowUsee.wishList ? this.alert.addcont : this.alert.delcont }}</span>
+			</div>
 		</div>
 	</div>
 </template>
@@ -81,9 +87,18 @@ export default {
 			if (Cname === 'wish_list') {
 				this.$store.commit('setWishlist', this.nowUsee.id)
 			}
+			this.fadedmessage()
 		},
 		prepareW() {
 			this.$dontdosame.controlPremodal()
+		},
+		fadedmessage() {
+			let fadeoper = document.querySelector('#workitnow')
+			let fadein = setTimeout(() => {
+				fadeoper.classList.remove('faded')
+			}, 1200)
+			fadeoper.classList.add('faded')
+			fadein
 		},
 	},
 }
@@ -266,6 +281,49 @@ p {
 
 p.brating > span > img {
 	max-width: 23px;
+}
+
+.wishalert {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -45%;
+	margin-top: -25%;
+	width: 90%;
+	background-color: rgba(0, 0, 0, 0.7);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 8px;
+}
+
+#workitnow {
+	width: 100%;
+	left: 0;
+	top: 0;
+	height: 100vh;
+	position: absolute;
+	z-index: -100;
+	transition: all 300ms linear;
+	opacity: 0;
+}
+
+.wishalert > i {
+	font-size: 25px;
+	color: #fff;
+	line-height: 2em;
+	margin-right: 10px;
+}
+
+.wishalert > span {
+	color: #fff;
+	font-size: 20px;
+	line-height: 2em;
+}
+
+.faded {
+	opacity: 1 !important;
+	z-index: 1000 !important;
 }
 
 @media screen and (min-width: 649px) {

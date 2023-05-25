@@ -3,14 +3,7 @@
 		<nav class="barwindow">
 			<h2 class="hide">sub-subnav</h2>
 			<ul class="besttagbar">
-				<li
-					:class="idx === 0 ? 'selected' : false"
-					v-for="(i, idx) in filtiyps"
-					:key="idx"
-					primary
-					@click="sortquery(i.sortquery, idx)"
-					class="noon"
-				>
+				<li v-for="(i, idx) in filtiyps" :key="idx" primary @click="sortquery(i.sortquery, idx)" :class="i.checked ? 'selected' : false">
 					<span>{{ i.title }}</span>
 					<v-icon v-if="idx > 0">{{ i.sortup ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
 				</li>
@@ -30,31 +23,36 @@ export default {
 		return {
 			sample: this.$store.state.alcholdata.slice(),
 			filtiyps: [
-				{ title: '전체', sortquery: 'id', sortup: true },
+				{ title: '전체', sortquery: 'id', sortup: true, checked: false },
 				{
 					title: '베스트셀러',
 					sortquery: 'selling',
 					sortup: true,
+					checked: false,
 				},
 				{
 					title: '평가순',
 					sortquery: 'rating',
 					sortup: true,
+					checked: false,
 				},
 				{
 					title: '최신순',
 					sortquery: 'rdate',
 					sortup: true,
+					checked: false,
 				},
 				{
 					title: '할인순',
 					sortquery: 'sale',
 					sortup: true,
+					checked: false,
 				},
 				{
 					title: '가격순',
 					sortquery: 'saleprice',
 					sortup: true,
+					checked: false,
 				},
 				// {
 				// 	title: '더미2',
@@ -69,13 +67,15 @@ export default {
 			],
 		}
 	},
+	mounted() {
+		this.filtiyps[0].checked = true
+	},
 	methods: {
 		sortquery(x, y) {
-			let btn = document.querySelectorAll('.noon')
-			for (let i of btn) {
-				i.classList.remove('selected')
+			for (let i of this.filtiyps) {
+				i.checked = false
 			}
-			btn[y].classList.add('selected')
+			this.filtiyps[y].checked = true
 
 			if (x === 'id') {
 				for (let allsort of this.filtiyps) {

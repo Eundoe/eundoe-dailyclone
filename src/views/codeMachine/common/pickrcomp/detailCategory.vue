@@ -3,14 +3,7 @@
 		<nav class="scatewindow">
 			<h2 class="hide">sub-subnav</h2>
 			<ul class="scattagbar">
-				<li
-					:class="idx === 0 ? 'selected' : false"
-					v-for="(i, idx) in filtiyps"
-					:key="idx"
-					primary
-					@click="filtquery(i.filtquery, idx)"
-					class="noon"
-				>
+				<li v-for="(i, idx) in filtiyps" :key="idx" primary @click="filtquery(i.filtquery, idx)" :class="i.checked ? 'selected' : false">
 					<span>{{ i.title }}</span>
 				</li>
 			</ul>
@@ -29,42 +22,49 @@ export default {
 		return {
 			filtsample: this.$store.state.alcholdata.slice(),
 			filtiyps: [
-				{ title: '전체', filtquery: '', filtup: true },
+				{ title: '전체', filtquery: '', filtup: true, checked: false },
 				{
 					title: '와인',
 					filtquery: 'wine',
 					filtup: true,
+					checked: false,
 				},
 				{
 					title: '위스키',
 					filtquery: 'whiskey',
 					filtup: true,
+					checked: false,
 				},
 				{
 					title: '고량주',
 					filtquery: 'goryang',
 					filtup: true,
+					checked: false,
 				},
 				{
 					title: '스피릿',
 					filtquery: 'spirits',
 					filtup: true,
+					checked: false,
 				},
 				{
 					title: '전통소주',
 					filtquery: 'soju',
 					filtup: true,
+					checked: false,
 				},
 			],
 		}
 	},
+	mounted() {
+		this.filtiyps[0].checked = true
+	},
 	methods: {
 		filtquery(x, y) {
-			let btn = document.querySelectorAll('.noon')
-			for (let i of btn) {
-				i.classList.remove('selected')
+			for (let i of this.filtiyps) {
+				i.checked = false
 			}
-			btn[y].classList.add('selected')
+			this.filtiyps[y].checked = true
 			if (x === '') {
 				return (this.filtsample = this.$store.state.alcholdata)
 			} else {
