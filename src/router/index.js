@@ -12,7 +12,6 @@ import conTact from '../views/codeMachine/askNanswer.vue'
 import admincont from '../views/codeMachine/missingplace/customerCont.vue'
 import registration from '../views/codeMachine/missingplace/registration.vue'
 import login from '../views/codeMachine/missingplace/login.vue'
-import contdetail from '../views/codeMachine/missingplace/contdetail.vue'
 
 // 메인 화면
 import codeMachine from '../views/layout/codeMachine.vue'
@@ -52,7 +51,6 @@ const routes = [
 	},
 	{ path: '/contact', name: 'contact', component: conTact },
 	{ path: '/contadmin', name: 'contadmin', component: admincont },
-	{ path: '/contdeail', name: 'contdetail', component: contdetail },
 	{ path: '/register', name: 'registration', component: registration },
 	{ path: '/login', name: 'login', component: login },
 ]

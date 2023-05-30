@@ -1,20 +1,21 @@
 <template>
 	<div id="admin_contact">
 		<h1>Admin Show Contact</h1>
-		<v-container>
-			<v-data-table
-				hide-default-footer
-				:headers="headers"
-				:items="test"
-				:items-per-page="itemsPerPage"
-				:page.sync="page"
-				@page-count="pageCount = $event"
-				class="elevation-1"
-			></v-data-table>
-			<div class="text-center pt-2">
-				<v-pagination v-model="page" :length="pageCount"></v-pagination>
-			</div>
-		</v-container>
+		<ul>
+			<li class="tablecol containter">
+				<span>No_id</span>
+				<span>이름</span>
+				<span>제목</span>
+				<span>날짜</span>
+			</li>
+			<li class="empty_cont " v-if="this.test.length < 1">문의사항이 없습니다.</li>
+			<li v-else class="containter" v-for="(i, idx) of this.test" :key="idx">
+				<span>{{ i.id }}</span>
+				<span>{{ i.contact_name }}</span>
+				<span>{{ i.contact_title }}</span>
+				<span>{{ i.created_at.slice(0, 10) }}</span>
+			</li>
+		</ul>
 	</div>
 </template>
 
@@ -34,20 +35,7 @@ export default {
 	computed: {},
 	data() {
 		return {
-			page: 1,
-			pageCount: 0,
-			itemsPerPage: 3,
 			test: [],
-			headers: [
-				{
-					text: 'IDNO',
-					align: 'center',
-					value: 'id',
-				},
-				{ text: 'Title', value: 'contact_title' },
-				{ text: 'Email', value: 'contact_email' },
-				{ text: 'Name', value: 'contact_name' },
-			],
 		}
 	},
 }

@@ -86,8 +86,8 @@ export default {
 		wishListAdd(Cname) {
 			if (Cname === 'wish_list') {
 				this.$store.commit('setWishlist', this.nowUsee.id)
+				this.fadedmessage()
 			}
-			this.fadedmessage()
 		},
 		prepareW() {
 			this.$dontdosame.controlPremodal()

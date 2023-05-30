@@ -11,13 +11,11 @@
 					:error="item.error"
 					:error-messages="item.erMessage"
 					color="orange darken-2"
-					@blur="checkblorreg(item.cname)"
-					:type="item.ctype === 'password' ? 'password' : 'text'"
 				>
 				</v-text-field>
 			</v-flex>
 			<v-row justify="center">
-				<v-btn v-text="'등록하기'" :ripple="false" style="color: black;" large class="pa-5" color="orange" @click="checkMemberid"></v-btn>
+				<v-btn v-text="'등록하기'" :ripple="false" style="color: black;" large class="pa-5" color="orange"></v-btn>
 			</v-row>
 		</v-container>
 	</div>
@@ -26,14 +24,13 @@
 export default {
 	data() {
 		return {
-			realvalid: false,
 			regist: [
 				{
 					cname: 'member_name',
 					ctype: 'text',
 					content: '이름',
 					cregex: '',
-					error: false,
+					error: '',
 					erMessage: '',
 				},
 				{
@@ -41,7 +38,7 @@ export default {
 					ctype: 'text',
 					content: '아이디',
 					cregex: '',
-					error: false,
+					error: '',
 					erMessage: '',
 				},
 				{
@@ -49,7 +46,7 @@ export default {
 					ctype: 'password',
 					content: '비밀번호',
 					cregex: '',
-					error: false,
+					error: '',
 					erMessage: '',
 				},
 			],
@@ -61,65 +58,32 @@ export default {
 		}
 	},
 	methods: {
-		checkblorreg(x) {
-			let regex = {
-				member_name: /[a-zA-z가-힣]{1,}/,
-				member_id: /^[a-z]+[a-z0-9]{5,19}$/g,
-				member_password: /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/,
-			}
-			console.log(regex)
-			if (this.registset[x].length < 1) {
-				for (let i of this.regist) {
-					if (i.cname === x) {
-						i.erMessage = '빈칸이네요?'
-						i.error = true
-					}
-				}
-				return (this.realvalid = false)
-			} else {
-				if (!regex[x].test(this.registset[x])) {
-					for (let j of this.regist) {
-						if (j.cname === x) {
-							j.erMessage = '제대로 입력해주세요 '
-							j.error = true
-						}
-					}
-					return (this.realvalid = false)
-				} else {
-					for (let k of this.regist) {
-						if (k.cname === x) {
-							k.erMessage = ''
-							k.error = false
-						}
-					}
-					console.log('톹ㅇ과이!')
-					return (this.realvalid = true)
-				}
-			}
-		},
-
 		checkMemberid() {
-			for (let i of Object.keys(this.registset)) {
-				this.checkblorreg(i)
+			for (let i of this.regist) {
+				if (document.querySelector('input[name=' + i.cname + ']').value === '') {
+					alert('빈칸 없이 작성해주세요')
+					return false
+				} else {
+					this.registset[i.cname] = document.querySelector('input[name=' + i.cname + ']').value
+				}
 			}
-			console.log(this.realvalid)
-			if (this.realvalid) {
-				this.$axios
-					.get('http://localhost:1337/members')
-					.then(res => {
-						if (res.data.filter(x => x.member_id === this.registset.member_id).length > 0) {
-							alert('이미 가입된 회원입니다.')
-							return false
-						} else {
-							this.postMember()
-						}
-					})
-					.catch(err => {
-						console.log(err)
-						alert('현재 아이디 확인이 안됩니다.')
+			console.log(this.registset)
+			this.$axios
+				.get('http://localhost:1337/members')
+				.then(res => {
+					if (res.data.filter(x => x.member_id === this.registset.member_id).length > 0) {
+						alert('이미 가입된 회원입니다.')
 						return false
-					})
-			}
+					} else {
+						this.postMember()
+					}
+				})
+				.catch(err => {
+					console.log(err)
+					alert(
+						'현재 서비스 점검중입니다. 잠시 후 다시 시도해주세요. \n지속적인 서비스 장애가 발생시 하기로 연락부탁드립니다. \n고객센터 : 0000-1111',
+					)
+				})
 		},
 
 		postMember() {
@@ -127,24 +91,19 @@ export default {
 				method: 'post',
 				url: 'http://localhost:1337/members',
 				data: this.registset,
-				onUploadProgress: this.$store.commit('setLoadNow'),
 			})
 				.then(res => {
 					console.log(res)
-					this.$store.commit('setLoadNow')
 				})
 				.then(() => {
 					alert('등록이 완료되었습니다.')
-					for (let i of Object.keys(this.regist)) {
-						this.registset[i.cname] = ''
+					for (let j of this.regist) {
+						document.querySelector('input[name=' + j.cname + ']').value === ''
+						this.registset[j.cname] = ''
 					}
 				})
 				.catch(err => {
-					this.$store.commit('setLoadNow')
 					console.log(err)
-					alert(
-						'현재 서비스 점검중입니다. 잠시 후 다시 시도해주세요. \n지속적인 서비스 장애가 발생시 하기로 연락부탁드립니다. \n고객센터 : 0000-1111',
-					)
 				})
 		},
 	},

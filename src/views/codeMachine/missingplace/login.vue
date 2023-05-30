@@ -22,7 +22,7 @@
 export default {
 	data() {
 		return {
-			rules: [value => !!value || 'Required', value => (value && value.length >= 1) || 'Min 1 characters'],
+			rules: [value => !!value || '공란입니다.', value => (value && value.length >= 1) || 'Min 1 characters'],
 			loginform: [
 				{ cname: 'member_id', ctype: 'text', content: '아이디' },
 				{ cname: 'member_password', ctype: 'password', content: '패스워드' },

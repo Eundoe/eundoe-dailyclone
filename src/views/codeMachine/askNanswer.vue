@@ -1,37 +1,41 @@
 <template>
 	<div id="contwrap">
 		<h2>Contact</h2>
-		<form action="#" method="post">
-			<fieldset>
-				<legend>
-					<ul>
-						<li v-for="(i, idx) in this.formDate" :key="idx" :class="i.name">
-							<label :for="i.name">{{ i.title }}</label>
-							<input
-								v-if="i.type === 'input'"
-								:name="i.name"
-								:placeholder="i.content"
-								v-model="submitForm[i.name]"
-								@blur="i.check !== '' ? checkRegex(i.check, $event, idx) : false"
-							/>
-							<textarea
-								v-if="i.type === 'textarea'"
-								:name="i.name"
-								:placeholder="i.content"
-								v-model="submitForm[i.name]"
-								type="text"
-								row="5"
-								cols="30"
-								@blur="i.check !== '' ? checkRegex(i.check, $event, idx) : false"
-							></textarea>
-							<span class="warningsub" :class="i.checkresult === false ? 'openwarn' : false">잘못된 {{ i.title }} 입니다.</span>
-							<span class="emptysub" :class="i.checkresult === 'empty' ? 'openwarn' : false">필수항목 입니다.</span>
-						</li>
-					</ul>
-					<button type="submit" v-on:click="notFoundPage($event)">보내기</button>
-				</legend>
-			</fieldset>
-		</form>
+		<!-- <v-form ref="contform" lazy-validation> -->
+		<v-row>
+			<v-col cols="12" v-for="(cont, idx) in formDate" :key="idx">
+				<v-text-field
+					v-if="cont.type == 'input'"
+					required
+					v-model="submitForm[cont.name]"
+					:label="cont.title"
+					:error="cont.error"
+					:error-messages="cont.ermessage"
+					dense
+					class="mt-2 mb-2 pt-2 pb-2 "
+					color="orange darken-2"
+					@blur="checkmessage(cont.name)"
+				>
+				</v-text-field>
+				<v-textarea
+					class=" pt-2 pb-2 black--text"
+					v-if="cont.type == 'textarea'"
+					no-resize
+					v-model="submitForm[cont.name]"
+					:label="cont.title"
+					color="orange darken-2"
+					counter
+					:error="cont.error"
+					:error-messages="cont.ermessage"
+					@blur="checkmessage(cont.name)"
+				>
+				</v-textarea>
+			</v-col>
+		</v-row>
+		<v-row justify="center">
+			<v-btn :ripple="false" style="color: black;" large class="pa-5" color="orange" @click="confirmMessage" v-text="'보내기'"></v-btn>
+		</v-row>
+		<!-- </v-form> -->
 	</div>
 </template>
 
@@ -40,31 +44,43 @@ export default {
 	computed: {},
 	data() {
 		return {
+			realvalid: false,
 			formDate: [
 				{
 					title: '이메일',
-					content: 'sample@domain.com',
 					type: 'input',
 					name: 'contact_email',
-					check: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
-					checkresult: true,
+					// rules: [v => !!v || '이메일은 필수 사항입니다.', v => /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(v) || '이메일 양식이 맞지 않습니다.'],
+					error: false,
+					ermessage: '',
 				},
-				{ title: '이름', content: '홍길동', type: 'input', name: 'contact_name', check: /^[가-힣]{2,4}$/, checkresult: true },
+				{
+					title: '이름',
+					type: 'input',
+					name: 'contact_name',
+					// rules: [
+					// 	v => !!v || '이름은 필수 사항입니다.',
+					// 	v => !/[~!@#$%^&*()_+|<>?:{}.;|/'"]/.test(v) || '이름에는 특수문자를 사용할 수 없습니다.',
+					// 	v => !(v && v.length >= 8) || '이름은 8글자 이상 입력할 수 없습니다.',
+					// ],
+					error: false,
+					ermessage: '',
+				},
 				{
 					title: '제목',
-					content: '제목을 적어주세요',
 					type: 'input',
 					name: 'contact_title',
-					check: /[a-zA-z가-힣]{1,}/,
-					checkresult: true,
+					// rules: [v => !!v || '제목은 필수입니다.', v => /[a-zA-z가-힣]{1,}/.test(v) || '제목이 잘못 되었어요'],
+					error: false,
+					ermessage: '',
 				},
 				{
 					title: '문의사항',
-					content: '문의사항을 적어주세요',
 					type: 'textarea',
 					name: 'contact_content',
-					check: /[a-zA-z가-힣]{1,}/,
-					checkresult: true,
+					// rules: [v => !!v || '내용은 필수입니다.', v => /[a-zA-z가-힣]{1,}/.test(v) || '한글 또는 영어만 가능합니다.'],
+					error: false,
+					ermessage: '',
 				},
 			],
 			submitForm: {
@@ -73,91 +89,83 @@ export default {
 				contact_content: '',
 				contact_name: '',
 			},
-			errorcode: [],
-			wrongcode: [],
 		}
 	},
 	methods: {
-		notFoundPage(e) {
-			e.preventDefault()
-			this.confirmMessage()
-		},
-		checkRegex(x, e, idx) {
-			if (e.target.value.length < 1) {
-				this.formDate[idx].checkresult = 'empty'
-				this.errorcode.push(this.formDate[idx].title)
-			} else {
-				if (this.errorcode.length > 0) {
-					this.errorcode = this.errorcode.filter(item => {
-						return item !== this.formDate[idx].title
-					})
-				}
-
-				let result = x.test(e.target.value)
-				this.formDate[idx].checkresult = result
-				if (!result) {
-					this.wrongcode.push(this.formDate[idx].title)
-				} else {
-					if (this.wrongcode.length > 0) {
-						this.wrongcode = this.wrongcode.filter(item => {
-							return item !== this.formDate[idx].title
-						})
+		checkmessage(x) {
+			let regex = {
+				contact_email: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+				contact_title: /[a-zA-z가-힣]{1,}/,
+				contact_content: /[a-zA-z가-힣]{1,}/,
+				contact_name: /[a-zA-z가-힣]{1,}/,
+			}
+			if (this.submitForm[x].length < 1) {
+				for (let i of this.formDate) {
+					if (i.name === x) {
+						i.ermessage = '필수 작성 내용입니다.'
+						i.error = true
 					}
 				}
-			}
-		},
-		confirmMessage() {
-			for (let j of Object.keys(this.submitForm)) {
-				if (this.submitForm[j].length < 1) {
+				return (this.realvalid = false)
+			} else {
+				if (!regex[x].test(this.submitForm[x])) {
 					for (let k of this.formDate) {
-						if (k.name === j) {
-							k.checkresult = 'empty'
-							this.errorcode.push(k.title)
+						if (k.name === x) {
+							k.ermessage = '잘못 된 포맷입니다 다시 작성해주세요'
+							k.error = true
 						}
 					}
-				}
-			}
-
-			if (this.wrongcode.length > 1 || this.errorcode.length > 1) {
-				if (this.wrongcode.length >= 1) {
-					alert(`잘못된 ${this.wrongcode.join(',')}이 있습니다. 전부 작성해주세요`)
-				}
-
-				if (this.errorcode.length >= 1) {
-					alert(`비어있는 ${this.errorcode.join(',')}이 있습니다. 전부 작성해주세요`)
-				}
-				return false
-			}
-
-			this.$axios({
-				method: 'post',
-				url: 'http://localhost:1337/contactdata',
-				data: {
-					contact_email: this.submitForm.contact_email,
-					contact_name: this.submitForm.contact_name,
-					contact_title: this.submitForm.contact_title,
-					contact_content: this.submitForm.contact_content,
-				},
-				onUploadProgress: this.$store.commit('setLoadNow'),
-			})
-				.then(res => {
-					this.$store.commit('setLoadNow')
-					console.log(res)
-					console.log('등록이완료되었습니다.')
-				})
-				.then(() => {
-					alert('등록이 완료되었습니다.')
-					for (let k of this.formDate) {
-						this.submitForm[k.name] = ''
+					return (this.realvalid = false)
+				} else {
+					for (let l of this.formDate) {
+						if (l.name === x) {
+							l.ermessage = ''
+							l.error = false
+						}
 					}
+					return (this.realvalid = true)
+				}
+			}
+		},
+
+		confirmMessage() {
+			// const validate = this.$refs['contform'].validate()
+			for (let i of Object.keys(this.submitForm)) {
+				this.checkmessage(i)
+			}
+
+			if (this.realvalid) {
+				this.$axios({
+					method: 'post',
+					url: 'http://localhost:1337/contactdata',
+					data: {
+						contact_email: this.submitForm.contact_email,
+						contact_name: this.submitForm.contact_name,
+						contact_title: this.submitForm.contact_title,
+						contact_content: this.submitForm.contact_content,
+					},
+					onUploadProgress: this.$store.commit('setLoadNow'),
 				})
-				.catch(err => {
-					this.$store.commit('setLoadNow')
-					console.log(err)
-					alert(
-						'현재 서비스 점검중입니다. 잠시 후 다시 시도해주세요. \n지속적인 서비스 장애가 발생시 하기로 연락부탁드립니다. \n고객센터 : 0000-1111',
-					)
-				})
+					.then(res => {
+						this.$store.commit('setLoadNow')
+						console.log(res)
+					})
+					.then(() => {
+						alert('등록이 완료되었습니다.')
+						for (let k of this.formDate) {
+							this.submitForm[k.name] = ''
+						}
+					})
+					.catch(err => {
+						this.$store.commit('setLoadNow')
+						console.log(err)
+						alert(
+							'현재 서비스 점검중입니다. 잠시 후 다시 시도해주세요. \n지속적인 서비스 장애가 발생시 하기로 연락부탁드립니다. \n고객센터 : 0000-1111',
+						)
+					})
+			} else {
+				console.log('실패!')
+			}
 		},
 	},
 }
@@ -179,7 +187,7 @@ input {
 }
 
 #contwrap {
-	padding: 10px 28px;
+	padding: 40px 28px;
 }
 
 #contwrap legend {
@@ -193,103 +201,15 @@ input {
 
 #contwrap > form {
 	box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);
-	padding: 30px 5px;
+	padding: 30px 10px;
 	margin: 30px 0;
 }
 
-#contwrap > form legend > ul {
-	margin-bottom: 20px;
+.v-text-field input {
+	font-size: 20px;
 }
-
-#contwrap > form legend > ul > li {
-	display: flex;
-	justify-content: flex-start;
-	align-items: flex-start;
-	margin: 10px 0;
-	flex-wrap: wrap;
-}
-
-#contwrap > form legend > ul > li > label {
-	max-width: 30%;
-	min-width: 30%;
-	font-size: 22px;
-	box-sizing: border-box;
-	padding: 5px 15px;
-	line-height: 1.5em;
-	text-align: center;
-	margin-right: 10px;
-	border-right: 1px solid rgba(0, 0, 0, 0.8);
-}
-
-#contwrap > form legend > ul > li > input,
-textarea {
-	width: 65%;
-	border: 2px solid orange;
-	font-size: 22px;
-	line-height: 1.5em;
-	padding: 5px 10px;
-	border-radius: 5px;
-	background-color: #fff;
-}
-
-#contwrap > form legend > ul > li > input:focus,
-textarea:focus {
-	outline-color: orangered;
-	outline-width: 0.2px;
-}
-
-#contwrap > form legend > ul > li > input::placeholder,
-textarea::placeholder {
-	color: rgba(0, 0, 0, 0.4);
-}
-
-#contwrap > form legend > ul > li > textarea {
-	min-height: 150px;
-	resize: none;
-}
-
-#contwrap > form legend > button {
-	padding: 8px 24px;
-	font-size: 22px;
-	background-color: orange;
-	display: block;
-	margin: 0 auto;
-	border-radius: 25px;
-}
-
-#contwrap > form legend > button:active {
-	background-color: orangered;
-	color: #fff;
-}
-
-.warningsub {
-	height: 0;
-	font-size: 0;
-	padding: 0;
-	width: 100%;
-	text-align: center;
-	color: red;
-	transition: all 0.2s linear;
-	font-weight: 600;
-	margin: 0;
-}
-
-.emptysub {
-	height: 0;
-	font-size: 0;
-	padding: 0;
-	margin: 0;
-	width: 100%;
-	text-indent: 200px;
-	color: rgb(255, 81, 0);
-	transition: all 0.2s linear;
-	font-weight: 600;
-}
-
-span.openwarn {
-	height: auto;
-	margin: 5px 0;
-	font-size: 14px;
-	line-height: 1.5em;
+.v-text-field .v-messages {
+	padding: 2px 0 !important;
+	font-size: 14px !important;
 }
 </style>
